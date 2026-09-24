@@ -18,6 +18,12 @@ A focused two-player life counter built with React Native, Expo SDK 54, and Type
 
 Match history is intentionally session-based: finishing a game archives its final totals inside the current match. Resetting the entire match clears the archive, while preferences remain saved on the device.
 
+## Install on Android
+
+Download the APK from the [latest GitHub release](https://github.com/Elitemoni/mtg-life-counter/releases/latest) on your Android phone, then open the downloaded file to install it. Android may ask you to allow installs from your browser or Files app. This standalone app does not require Expo Go or a running development server.
+
+To create another installable APK, run `npx eas-cli build --platform android --profile personal`. The `personal` profile in `eas.json` produces an APK for direct installation.
+
 ## Run it
 
 Prerequisites: Node.js, the Expo Go app or an Android emulator, and npm.

@@ -1,0 +1,10 @@
+{
+  "build": {
+    "personal": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    }
+  }
+}

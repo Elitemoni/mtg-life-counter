@@ -26,6 +26,12 @@
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "e5af7073-5284-432f-9657-17d05a0e668a"
+      }
+    },
+    "owner": "elitemoni"
   }
 }
