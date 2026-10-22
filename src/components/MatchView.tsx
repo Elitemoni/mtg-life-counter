@@ -63,7 +63,7 @@ export function MatchView({
             <Text style={styles.emptyIcon}>≋</Text>
             <Text style={styles.emptyTitle}>No finished games yet</Text>
             <Text style={styles.emptyBody}>
-              Use the next-game icon in the center bar to archive the current game.
+              Press and hold the center star to archive the current game.
             </Text>
           </View>
         ) : (

@@ -52,8 +52,8 @@ npm run export:android
 - Taps within 1.3 seconds are grouped. Five quick `+1` taps show `+5`, then add one `20 → 25` transcript entry when the badge fades.
 - Tap the ledger icon inside either panel to animate its current life into the upper-left and reveal both players' numbered transcript in place. Tap the heart to return to the counter.
 - Use the bottom-right paintbrush for preset colors or the inline precision-color grid.
-- Tap the gold center button to reveal evenly spaced next-game and match-history icons on the left, with settings on the right. The life totals and ± controls remain stationary while the rail expands.
-- Press and hold the circular next-game arrow to archive the current game and start another. The match-history icon opens an inline match screen where the entire match can be reset.
+- Tap the gold center button to reveal match history on the left and settings on the right. The life totals and ± controls remain stationary while the rail expands.
+- Press and hold the center star to archive the current game and start another. The gold ring pulses and the phone gives haptic feedback while the black rail stays at its current height. The match-history icon opens an inline match screen where the entire match can be reset.
 - The life total and its ring animate together into history and return together to the center.
 - Player colors, starting-life fine adjustment, haptics, and screen behavior are kept in the only popup: **Settings**.
 

@@ -4,7 +4,7 @@ import * as Haptics from 'expo-haptics';
 import * as KeepAwake from 'expo-keep-awake';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Animated, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Animated, Easing, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MatchView } from './src/components/MatchView';
@@ -94,6 +94,8 @@ function AppContent() {
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [matchViewVisible, setMatchViewVisible] = useState(false);
   const centerProgress = useRef(new Animated.Value(0)).current;
+  const centerRingPulse = useRef(new Animated.Value(1)).current;
+  const centerLongPressTriggered = useRef(false);
   const commitTimers = useRef<[PlayerTimer, PlayerTimer]>([undefined, undefined]);
 
   useEffect(() => {
@@ -155,19 +157,42 @@ function AppContent() {
     [],
   );
 
-  function feedback(kind: 'tap' | 'confirm' = 'tap') {
+  function feedback(kind: 'tap' | 'confirm' | 'longPress' = 'tap') {
     if (!preferences.haptics) return;
 
     if (Platform.OS === 'android') {
       const androidKind =
-        kind === 'confirm' ? Haptics.AndroidHaptics.Confirm : Haptics.AndroidHaptics.Virtual_Key;
+        kind === 'longPress'
+          ? Haptics.AndroidHaptics.Long_Press
+          : kind === 'confirm'
+            ? Haptics.AndroidHaptics.Confirm
+            : Haptics.AndroidHaptics.Virtual_Key;
       void Haptics.performAndroidHapticsAsync(androidKind).catch(() => undefined);
       return;
     }
 
     const style =
-      kind === 'confirm' ? Haptics.ImpactFeedbackStyle.Medium : Haptics.ImpactFeedbackStyle.Light;
+      kind === 'tap' ? Haptics.ImpactFeedbackStyle.Light : Haptics.ImpactFeedbackStyle.Medium;
     void Haptics.impactAsync(style).catch(() => undefined);
+  }
+
+  function pulseCenterRing() {
+    centerRingPulse.stopAnimation();
+    centerRingPulse.setValue(1);
+    Animated.sequence([
+      Animated.timing(centerRingPulse, {
+        toValue: 1.55,
+        duration: 180,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: false,
+      }),
+      Animated.timing(centerRingPulse, {
+        toValue: 1,
+        duration: 260,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: false,
+      }),
+    ]).start();
   }
 
   function animateCenter(expanded: boolean) {
@@ -241,8 +266,8 @@ function AppContent() {
       };
     });
     setHistoryOpen([false, false]);
-    animateCenter(false);
-    feedback('confirm');
+    pulseCenterRing();
+    feedback('longPress');
   }
 
   function resetEntireMatch() {
@@ -387,20 +412,6 @@ function AppContent() {
               ]}
             >
               <Pressable
-                accessibilityHint="Press and hold to archive this game and reset both life totals"
-                accessibilityLabel="Finish game and start next game"
-                accessibilityRole="button"
-                delayLongPress={650}
-                onLongPress={startNextGame}
-                style={({ pressed }) => [
-                  styles.iconAction,
-                  styles.newGameAction,
-                  pressed && styles.iconActionPressed,
-                ]}
-              >
-                <MaterialCommunityIcons color="#D9C27F" name="sync" size={25} />
-              </Pressable>
-              <Pressable
                 accessibilityLabel="Open match history"
                 accessibilityRole="button"
                 onPress={openMatchView}
@@ -443,13 +454,22 @@ function AppContent() {
 
             <View style={styles.centerButtonWrap}>
               <Pressable
-                accessibilityHint="Shows next-game, match-history, and settings controls"
+                accessibilityHint="Tap for match history and settings; press and hold to archive the current game and reset both life totals"
                 accessibilityLabel={centerExpanded ? 'Close match controls' : 'Open match controls'}
                 accessibilityRole="button"
+                delayLongPress={650}
                 hitSlop={8}
+                onLongPress={() => {
+                  centerLongPressTriggered.current = true;
+                  startNextGame();
+                }}
                 onPress={() => {
+                  if (centerLongPressTriggered.current) return;
                   animateCenter(!centerExpanded);
                   feedback('tap');
+                }}
+                onPressIn={() => {
+                  centerLongPressTriggered.current = false;
                 }}
                 style={({ pressed }) => [styles.centerButton, pressed && styles.centerButtonPressed]}
               >
@@ -464,6 +484,7 @@ function AppContent() {
                       height: centerGoldRingSize,
                       left: centerGoldRingInset,
                       top: centerGoldRingInset,
+                      transform: [{ scale: centerRingPulse }],
                       width: centerGoldRingSize,
                     },
                   ]}
@@ -618,14 +639,9 @@ const styles = StyleSheet.create({
     marginTop: -22,
     height: 44,
   },
-  newGameAction: {
-    position: 'absolute',
-    left: 20,
-  },
   matchViewAction: {
     position: 'absolute',
-    left: '25%',
-    marginLeft: -4,
+    left: 20,
   },
   rightActions: {
     position: 'absolute',
