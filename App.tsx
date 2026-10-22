@@ -392,6 +392,7 @@ function AppContent() {
             onAdjust={adjustLife}
             onChooseColor={chooseColor}
             onToggleHistory={toggleHistory}
+            playerColors={preferences.playerColors}
             players={match.activeGame.players}
             playerIndex={0}
           />
@@ -509,6 +510,7 @@ function AppContent() {
             onAdjust={adjustLife}
             onChooseColor={chooseColor}
             onToggleHistory={toggleHistory}
+            playerColors={preferences.playerColors}
             players={match.activeGame.players}
             playerIndex={1}
           />

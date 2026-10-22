@@ -13,6 +13,7 @@ type PlayerPanelProps = {
   flipped?: boolean;
   gameHistory: GameHistoryEntry[];
   historyOpen: boolean;
+  playerColors: [string, string];
   players: [PlayerState, PlayerState];
   playerIndex: PlayerIndex;
   onAdjust: (playerIndex: PlayerIndex, amount: number) => void;
@@ -26,6 +27,7 @@ export function PlayerPanel({
   flipped = false,
   gameHistory,
   historyOpen,
+  playerColors,
   players,
   playerIndex,
   onAdjust,
@@ -283,8 +285,14 @@ export function PlayerPanel({
             <View style={styles.table}>
               <View style={[styles.tableRow, styles.tableHeader]}>
                 <Text style={[styles.tableHeaderText, styles.numberColumn]}>#</Text>
-                <Text style={[styles.tableHeaderText, styles.lifeColumn]}>P1</Text>
-                <Text style={[styles.tableHeaderText, styles.lifeColumn]}>P2</Text>
+                <View style={[styles.tablePlayerHeader, styles.lifeColumn]}>
+                  <Text style={styles.tableHeaderText}>P1</Text>
+                  <View style={[styles.tablePlayerColor, { backgroundColor: playerColors[0] }]} />
+                </View>
+                <View style={[styles.tablePlayerHeader, styles.lifeColumn]}>
+                  <Text style={styles.tableHeaderText}>P2</Text>
+                  <View style={[styles.tablePlayerColor, { backgroundColor: playerColors[1] }]} />
+                </View>
                 <Text style={[styles.tableHeaderText, styles.changeColumn]}>CHANGE</Text>
               </View>
               <ScrollView
@@ -636,6 +644,18 @@ const styles = StyleSheet.create({
   },
   lifeColumn: {
     width: '21%',
+  },
+  tablePlayerHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  tablePlayerColor: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.65)',
   },
   changeColumn: {
     width: '44%',

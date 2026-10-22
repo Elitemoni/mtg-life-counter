@@ -7,7 +7,7 @@ A focused two-player life counter built with React Native, Expo SDK 54, and Type
 - Two mirrored player panels with bounded left-side `−1` and right-side `+1` controls
 - A cumulative change badge that batches rapid taps, then writes one clear history entry
 - Gain badges sit above the number's right edge; loss badges sit above its left edge
-- Inline shared life tables numbered from row 0, with both players' totals on every change
+- Inline shared life tables numbered from row 0, with both players' totals on every change and color dots beside their headers
 - An inline paintbrush palette with eight presets plus a rainbow precision-color grid
 - A compact center rail that expands to reveal evenly spaced icon-only match controls
 - Multi-game match tracking with condensed final scores and change counts
